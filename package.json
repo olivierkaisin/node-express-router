@@ -17,5 +17,9 @@
   "devDependencies": {
     "chai": "~1.8.1",
     "mocha": "~1.17.0"
+  },
+  "repository": {
+    "type" : "git",
+    "url"  : "https://github.com/olivierkaisin/express-router.git"
   }
 }
