@@ -11,12 +11,12 @@
   "dependencies": {
     "q": "~1.0.0",
     "lodash": "~2.4.1",
-    "express": "~3.4.8",
     "express-validator": "~1.0.1"
   },
   "devDependencies": {
     "chai": "~1.8.1",
     "mocha": "~1.17.0"
+    "express": "~3.4.8",
   },
   "repository": {
     "type": "git",
