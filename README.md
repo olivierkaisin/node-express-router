@@ -61,3 +61,9 @@ expressRouter.create(app, "./path/to/routes");
 
 app.listen(80);
 ```
+
+
+### Remarks:
+
+1. Routes prefixed by `_` **won't be included** 
+2. You can enable debug mode by calling `expressRouter.enableDebug();`
