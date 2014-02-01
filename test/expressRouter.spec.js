@@ -6,7 +6,7 @@
 
 var assert = require("chai").assert;
 
-var expressRouter = require("../").expressRouter;
+var expressRouter = require("../");
 var express = require("express");
 
 
