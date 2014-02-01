@@ -45,3 +45,19 @@ module.exports = {
   respond  : respond
 };
 ```
+
+
+### How to use with your express app
+
+```javascript
+var express = require("express");
+var expressRouter = require("expressjs-router");
+
+
+var app = express();
+
+expressRouter.create(app, "./path/to/routes");
+
+
+app.listen(80);
+```
