@@ -60,4 +60,21 @@ describe("expressRouter", function () {
       expressRouter._buildRoute(app, definition);
     });
   });
+
+  it("should create conditionals as expected", function () {
+    var conditional = function (req, res) {
+      return !!req.user;
+    };
+
+    expressRouter.createConditional("requireSession", conditional);
+
+    assert.isDefined(expressRouter._conditionals.requireSession);
+    assert.strictEqual(conditional, expressRouter._conditionals.requireSession);
+
+    var shouldntRun = expressRouter._checkConditionals({ conditions: ["requireSession"] }, {}, {});
+    var shouldRun = expressRouter._checkConditionals({ conditions: ["requireSession"] }, { user: {} }, {});
+
+    assert.strictEqual(shouldntRun, false);
+    assert.strictEqual(shouldRun, true);
+  });
 });
