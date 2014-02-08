@@ -34,7 +34,7 @@ describe("expressRouter", function () {
         method: 'NONHTTPMETHOD'
       };
 
-      expressRouter._buildRoute(app, definition);
+      expressRouter._validateRoute(definition);
     });
   });
 
@@ -45,7 +45,7 @@ describe("expressRouter", function () {
         method: 'GET'
       };
 
-      expressRouter._buildRoute(app, definition);
+      expressRouter._validateRoute(definition);
     });
   });
 
@@ -57,7 +57,7 @@ describe("expressRouter", function () {
         method: 'GET'
       };
 
-      expressRouter._buildRoute(app, definition);
+      expressRouter._validateRoute(definition);
     });
   });
 
