@@ -14,14 +14,19 @@ var MyModel = require("./models/MyModel");
 
 
 
-function validate(req, res, next) {
+// The synchronous validate function is executed before the responder, allowing
+// to easily check for the existence of parameters and their format.
+// 
+// If a parameter doesn't follow the specification, the router will automatically
+// respond with an HTTP 400 status and output validation errors in a JSON.
+function validate(req, res) {
   req.assert("id")
     .notEmpty().isInt();
-
-  next(req, res, next);
 }
 
 
+
+// The respond method is the actual implementation of our route
 function respond(req, res, next) {
   var id = req.param("id");
   
@@ -37,12 +42,18 @@ function respond(req, res, next) {
 
 
 
+// The exports describe the route definition.
+// .path, .method and .respond are required
+// 
+// Conditions are checked to define wether the route should be
+// executed or not. You can define as many conditions as you want.
 module.exports = {
   path: "/status/:id",
   method: "GET",
 
-  validate : validate,
-  respond  : respond
+  validate   : validate,
+  respond    : respond,
+  conditions : ["loginRequired"]
 };
 ```
 
@@ -56,6 +67,16 @@ var expressRouter = require("expressjs-router");
 
 var app = express();
 
+
+// By enabling debug mode, routes will be logged to stdout
+expressRouter.enableDebug();
+
+// This conditional will allow us to require login on routes
+expressRouter.createConditional("loginRequired", function (req, res) {
+  return !!req.user;
+});
+
+// We finally create our routes by giving the path where they are stored
 expressRouter.create(app, "./path/to/routes");
 
 
@@ -67,3 +88,8 @@ app.listen(80);
 
 1. Routes prefixed by `_` **won't be included** 
 2. You can enable debug mode by calling `expressRouter.enableDebug();`
+
+
+### License:
+
+MIT
