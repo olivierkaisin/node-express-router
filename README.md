@@ -1,16 +1,32 @@
-Express Router
-==============
+Express.js Router
+=================
 
 Structured routing for **Express.JS**
 
 
-### Example `route.js`
+## Example
+
+
+Project structure: 
+
+```
+.
++-- routes
+|   +-- getStatus.js
++-- models
+|   +-- MyModel.js
++-- app.js
+```
+
+### Route definition `getStatus.js`
 
 ```javascript
+// File: ./routes/getStatus.js
+
 "use strict";
 
 
-var MyModel = require("./models/MyModel");
+var MyModel = require("../models/MyModel");
 
 
 
@@ -57,10 +73,15 @@ module.exports = {
 };
 ```
 
-
-### How to use with your express app
+### Express `app.js`
 
 ```javascript
+// File: ./app.js
+
+
+"use strict";
+
+
 var express = require("express");
 var expressRouter = require("expressjs-router");
 
