@@ -1,4 +1,4 @@
-Express.js Router
+Express.js Router [![Build Status](https://travis-ci.org/olivierkaisin/express-router.png?branch=master)](https://travis-ci.org/olivierkaisin/express-router)
 =================
 
 Structured routing for **Express.JS**
