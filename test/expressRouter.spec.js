@@ -77,4 +77,33 @@ describe("expressRouter", function () {
     assert.strictEqual(shouldntRun, false);
     assert.strictEqual(shouldRun, true);
   });
+
+  it("should preload sequentially", function (done) {
+    expressRouter.setPreloadingMode(1);
+
+    expressRouter.createPreloader("test0", function (callback) {
+      setTimeout(function () {
+        return callback(null, "data0");
+      }, 1000);    
+    });    
+    expressRouter.createPreloader("test1", function (callback) {
+      setTimeout(function () {
+        return callback(null, "data1");
+      }, 200);      
+    });    
+
+    var definition = {
+      preload: ["test0", "test1"]
+    };
+    var req = {};
+
+    expressRouter._preloadRoute(definition, req).then(function () {
+      assert.deepEqual(req.preloadedData, {
+        test0: "data0",
+        test1: "data1"
+      });
+
+      done();
+    }).done();
+  });
 });
