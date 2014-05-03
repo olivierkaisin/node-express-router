@@ -81,12 +81,12 @@ describe("expressRouter", function () {
   it("should preload sequentially", function (done) {
     expressRouter.setPreloadingMode(1);
 
-    expressRouter.createPreloader("test0", function (callback) {
+    expressRouter.createPreloader("test0", function (req, callback) {
       setTimeout(function () {
         return callback(null, "data0");
       }, 1000);    
     });    
-    expressRouter.createPreloader("test1", function (callback) {
+    expressRouter.createPreloader("test1", function (req, callback) {
       setTimeout(function () {
         return callback(null, "data1");
       }, 200);      
