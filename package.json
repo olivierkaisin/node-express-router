@@ -2,11 +2,13 @@
   "name": "expressjs-router",
   "version": "1.2.3",
   "description": "Structured routes for ExpressJS",
-  "main": "index.js",
+  "main": "lib/expressRouter.js",
   "scripts": {
     "test": "mocha --check-leaks"
   },
-  "author": "Olivier Kaisin",
+  "author": {
+    "name": "Olivier Kaisin"
+  },
   "license": "MIT",
   "dependencies": {
     "lodash": "~2.4.1",
