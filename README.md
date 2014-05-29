@@ -1,4 +1,4 @@
-Express.js Router [![Build Status](https://travis-ci.org/olivierkaisin/express-router.png?branch=master)](https://travis-ci.org/olivierkaisin/express-router)
+Express.js Router [![Build Status](https://travis-ci.org/olivierkaisin/node-express-router.svg?branch=master)](https://travis-ci.org/olivierkaisin/node-express-router)
 =================
 
 Structured routing for **Express.JS**
@@ -51,7 +51,11 @@ function respond(req, res, next) {
       return req.json(500, { error: error.message });
     }
     else {
-      res.json({ status: "OK", data: instance });
+      res.json({ 
+        status: "OK",
+        data: instance,
+        stocks: req.preloadedData.stocks 
+      });
     }
   });
 }
@@ -69,7 +73,8 @@ module.exports = {
 
   validate   : validate,
   respond    : respond,
-  conditions : ["loginRequired"]
+  conditions : ["loginRequired"],
+  preload    : ["stocks"]
 };
 ```
 
@@ -96,6 +101,22 @@ expressRouter.enableDebug();
 expressRouter.createConditional("loginRequired", function (req, res) {
   return !!req.user;
 });
+
+// This preloader will make available resources on any route that asks for it
+expressRouter.createPreloader("stocks", function (req, callback) {
+  StockModel.findForUser(req.user._id).then(function (stocks) {
+    callback(stocks);
+  });
+});
+
+
+// You can decide if either you want to preload resources sequentially or in parallel
+//
+// 0 -> parallel (default)
+// 1 -> sequential
+//
+expressRouter.setPreloadingMode(1);
+
 
 // We finally create our routes by giving the path where they are stored
 expressRouter.create(app, "./path/to/routes");
