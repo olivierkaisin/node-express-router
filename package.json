@@ -12,8 +12,8 @@
   "license": "MIT",
   "dependencies": {
     "lodash": "~2.4.1",
-    "express-validator": "~1.0.1",
-    "bluebird": "~1.2.4"
+    "express-validator": "~2.8.0",
+    "bluebird": "~2.8.0"
   },
   "devDependencies": {
     "chai": "~1.8.1",
