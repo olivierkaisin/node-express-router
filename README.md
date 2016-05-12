@@ -3,61 +3,65 @@ Express.js Router [![Build Status](https://travis-ci.org/olivierkaisin/node-expr
 
 Structured routing for **Express.JS**
 
-
 ## Example
 
+Every route is implemented in its dedicated file
 
-Project structure: 
+
+Example:
 
 ```
 .
 +-- routes
-|   +-- getStatus.js
+|   +-+ todos
+|     +-- create.js
+|     +-- update.js
+|     +-- delete.js
 +-- models
-|   +-- MyModel.js
-+-- app.js
+|   +-- todo.js
++-- server.js
 ```
 
-### Route definition `getStatus.js`
 
-```javascript
-// File: ./routes/getStatus.js
+### Example route definition `routes/todos/create.js`
 
-"use strict";
+```
+// File: ./routes/todos/create.js
 
-
-var MyModel = require("../models/MyModel");
+'use strict';
 
 
+const Todo = require("../../models/todo");
 
-// The synchronous validate function is executed before the responder, allowing
+
+
+// The validate function is executed before the responder, allowing
 // to easily check for the existence of parameters and their format.
+// If some parameters are not valid, the function must throw an error
 // 
-// If a parameter doesn't follow the specification, the router will automatically
-// respond with an HTTP 400 status and output validation errors in a JSON.
-function validate(req, res) {
-  req.assert("id")
-    .notEmpty().isInt();
+// Note: Can be either synchronous or asynchronous.
+function validate(req) {
+  if (!req.body.text) {
+    throw new Error('Missing parameter "text"')
+  }
 }
 
 
-
 // The respond method is the actual implementation of our route
-function respond(req, res, next) {
-  var id = req.param("id");
+async function respond(req, res, next) {
+  let { text } = req.body;
+  let user = req.preloadedData.user;
   
-  MyModel.findById(id, function (error, instance) {
-    if (error) {
-      return req.json(500, { error: error.message });
-    }
-    else {
-      res.json({ 
-        status: "OK",
-        data: instance,
-        stocks: req.preloadedData.stocks 
-      });
-    }
+  let todo = new Todo({
+    text,
+    user,
   });
+  
+  await todo.validate();
+  await todo.save();
+  
+  res.status(201);
+  res.json({ todo });
 }
 
 
@@ -67,46 +71,42 @@ function respond(req, res, next) {
 // 
 // Conditions are checked to define wether the route should be
 // executed or not. You can define as many conditions as you want.
-module.exports = {
-  path: "/status/:id",
-  method: "GET",
+export default {
+  path: '/todos',
+  method: 'POST',
 
-  validate   : validate,
-  respond    : respond,
-  conditions : ["loginRequired"],
-  preload    : ["stocks"]
+  validate
+  respond,
+  
+  conditions : [ 'isLoggedIn' ],
+  preload    : [ 'user' ],
 };
 ```
 
-### Express `app.js`
+### Express app `server.js`
 
-```javascript
+```
 // File: ./app.js
 
+'use strict';
 
-"use strict";
+import express from 'express'; 
+import router from 'expressjs-router';
 
-
-var express = require("express");
-var expressRouter = require("expressjs-router");
-
-
-var app = express();
+const app = express();
 
 
 // By enabling debug mode, routes will be logged to stdout
-expressRouter.enableDebug();
+router();
 
-// This conditional will allow us to require login on routes
-expressRouter.createConditional("loginRequired", function (req, res) {
-  return !!req.user;
+// Conditionals allow us to add handy condition checks all over our app
+router.createConditional('isLoggedIn', async (req) => {
+  return !!req.session.user;
 });
 
-// This preloader will make available resources on any route that asks for it
-expressRouter.createPreloader("stocks", function (req, callback) {
-  StockModel.findForUser(req.user._id).then(function (stocks) {
-    callback(stocks);
-  });
+// Preloaders allow us to easily preload resources before the requests are executed
+router.createPreloader('user', async (req) => {
+  return await User.findById(req.session.user._id);
 });
 
 
@@ -115,11 +115,11 @@ expressRouter.createPreloader("stocks", function (req, callback) {
 // 0 -> parallel (default)
 // 1 -> sequential
 //
-expressRouter.setPreloadingMode(1);
+router.setPreloadingMode(1);
 
 
-// We finally create our routes by giving the path where they are stored
-expressRouter.create(app, "./path/to/routes");
+// Finally, create routes by padding the path where they're stored
+router.create(app, "./path/to/routes");
 
 
 app.listen(80);
@@ -128,8 +128,18 @@ app.listen(80);
 
 ### Remarks:
 
-1. Routes prefixed by `_` **won't be included** 
-2. You can enable debug mode by calling `expressRouter.enableDebug();`
+1. Routes prefixed by `_` or named `index.js` **won't be included** 
+2. You can enable debug mode by calling `router.enableDebug();`
+3. Route creation is recursive.
+
+
+### Changelog:
+
+#### 2.0.0-rc
+
+* Removed `express-validator`
+* Made validate function support asynchronous execution
+* Added `ALL` to match any HTTP method
 
 
 ### License:
