@@ -5,7 +5,7 @@ Structured routing for **Express.JS**
 
 ## Example
 
-Every route is implemented in its dedicated file
+Every route is implemented in a dedicated file
 
 
 Example:
@@ -25,7 +25,7 @@ Example:
 
 ### Example route definition `routes/todos/create.js`
 
-```
+```javascript
 // File: ./routes/todos/create.js
 
 'use strict';
@@ -85,7 +85,7 @@ export default {
 
 ### Express app `server.js`
 
-```
+```javascript
 // File: ./app.js
 
 'use strict';
