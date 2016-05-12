@@ -1,6 +1,6 @@
 {
   "name": "expressjs-router",
-  "version": "2.0.0-rc",
+  "version": "2.0.0-rc1",
   "description": "Structured routes for ExpressJS",
   "main": "lib/expressRouter.js",
   "scripts": {
