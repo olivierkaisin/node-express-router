@@ -140,7 +140,7 @@ app.listen(80);
 * Removed `express-validator`
 * Made validate function support asynchronous execution
 * Added `ALL` to match any HTTP method
-
+* Allowed `method` to be an array of HTTP methods
 
 ### License:
 
