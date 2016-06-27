@@ -135,10 +135,10 @@ app.listen(80);
 
 ### Changelog:
 
-#### 2.0.0-rc
+#### 2.0.0
 
 * Removed `express-validator`
-* Made validate function support asynchronous execution
+* Made validate function support asynchronous execution (using Promises)
 * Added `ALL` to match any HTTP method
 * Allowed `method` to be an array of HTTP methods
 
